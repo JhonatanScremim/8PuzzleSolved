@@ -6,7 +6,7 @@ namespace _8Puzzle
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("I am a 8-Puzzle!");
         }
     }
 }
