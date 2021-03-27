@@ -24,8 +24,12 @@ namespace _8Puzzle
             PuzzleState inicialState = new PuzzleState(inicial);
             PuzzleState finalState = new PuzzleState(final);
             Solver solver = new Solver(inicialState, finalState);
-            Console.WriteLine("solver.hasAnswer :: " + solver.hasAnswer);
-            Console.ReadKey();
+            Console.WriteLine("solver.hasAnswer :: " + solver.hasAnswer + "\n");
+            Console.WriteLine("inicial\n" + inicialState.WriteState() + "\n");
+            Console.WriteLine("final\n" + finalState.WriteState() + "\n");
+            Console.ReadKey(); 
         }
+
+        
     }
 }

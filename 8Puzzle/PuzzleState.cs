@@ -98,5 +98,31 @@ namespace _8Puzzle
             return obj is PuzzleState state &&
                    EqualityComparer<int[][]>.Default.Equals(Numbers);
         }
+
+        public string WriteState()
+        {
+            string result = "";
+            for (int x = 0; x < numbers.GetLength(0); x++)
+            {
+                result += "[";
+                for (int y = 0; y < numbers.GetLength(1); y++)
+                {
+                    result += numbers[x, y];
+                    if (y != numbers.GetLength(1) - 1)
+                    {
+                        result += ",";
+                    }
+                }
+                if (x == numbers.GetLength(0) - 1)
+                {
+                    result += "]";
+                }
+                else
+                {
+                    result += "]\n";
+                }
+            }
+            return result;
+        }
     }
 }
