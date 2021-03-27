@@ -14,35 +14,35 @@ namespace _8Puzzle
         private List<PuzzleState> openStates;
         public bool hasAnswer = false;
 
-        public Solver(PuzzleState inicial, PuzzleState final, List<PuzzleState> closedStates, List<PuzzleState> openStates)
+        public Solver(PuzzleState inicial, PuzzleState final)
         {
             this.inicial = inicial;
             this.final = final;
-            this.openStates = openStates;
-            this.closedStates = closedStates;
+            this.openStates = new List<PuzzleState>();
+            this.closedStates = new List<PuzzleState>();
 
             hasAnswer = CheckSolvable(inicial);
 
-            if (hasAnswer)
-            {
-                openStates.Add(inicial);
-                PuzzleState resolution = solve();
-            }
+            //if (hasanswer)
+            //{
+            //    openstates.add(inicial);
+            //    puzzlestate resolution = solve();
+            //}
         }
 
-        PuzzleState solve()
+        PuzzleState Solve()
         {
-            PuzzleState actualState = getLeastCostState();
-            closeState(actualState);
-            if (verifyFinished(actualState))
+            PuzzleState actualState = GetLeastCostState();
+            CloseState(actualState);
+            if (VerifyFinished(actualState))
             {
                 return actualState;
             }
-            addNewStates(actualState);
-            return solve();
+            AddNewStates(actualState);
+            return Solve();
         }
 
-        PuzzleState getLeastCostState()
+        PuzzleState GetLeastCostState()
         {
             PuzzleState leastCostState = null;
             foreach (PuzzleState item in openStates)
@@ -60,7 +60,7 @@ namespace _8Puzzle
             return leastCostState;
         }
 
-        bool verifyFinished(PuzzleState state)
+        bool VerifyFinished(PuzzleState state)
         {
             if (state.Equals(final))
             {
@@ -69,15 +69,15 @@ namespace _8Puzzle
             return false;
         }
 
-        void closeState(PuzzleState state)
+        void CloseState(PuzzleState state)
         {//Remove da lista de estados abertos e coloca na de estados fechados
             closedStates.Add(state);
             openStates.Remove(openStates.Find(x => x.Equals(state)));
         }
 
-        void addNewStates(PuzzleState state)
+        void AddNewStates(PuzzleState state)
         {
-            List<PuzzleState> list = state.generateChildren();
+            List<PuzzleState> list = state.GenerateChildren();
             foreach (PuzzleState item in list)
             {
                 openStates.Add(item);
@@ -89,13 +89,18 @@ namespace _8Puzzle
             var array = state.Numbers.Cast<int>().ToArray();
             int count = 0;
 
-            for (int i = 0; i < array.GetLength(0); i++)
-                for (int j = i + 1; j < array.GetLength(1); j++)
-                    if (array[i] > array[j])
+            for (int i = 0; i < array.Length; i++)
+            {
+                for (int j = i + 1; j < array.Length; j++)
+                {
+                    if (array[i] > array[j] && array[j] != 0 && array[i] != 0)
+                    {
                         count++;
+                    }
+                }
+            }
 
-            if (count % 2 == 0)
-                return true;
+            if (count % 2 == 0) { return true; }
 
             return false;
         }

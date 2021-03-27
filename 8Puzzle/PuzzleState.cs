@@ -39,13 +39,13 @@ namespace _8Puzzle
             }
         }
 
-        public List<PuzzleState> generateChildren()
+        public List<PuzzleState> GenerateChildren()
         {//Gera os filhos do puzzle e retorna
             if(xPosOf0 + 1 < Numbers.GetLength(0))
             {
                 //Cria um filho, modifica a posição do 0 e adiciona
                 PuzzleState children = this;
-                children.move0Position(xPosOf0 + 1, yPosOf0);
+                children.Move0Position(xPosOf0 + 1, yPosOf0);
                 children.xPosOf0 += 1;
                 children.PathCost = this.pathCost + 1;
                 ListOfChildren.Add(children);
@@ -53,7 +53,7 @@ namespace _8Puzzle
             if(xPosOf0 - 1 >= 0)
             {
                 PuzzleState children = this;
-                children.move0Position(xPosOf0 - 1, yPosOf0);
+                children.Move0Position(xPosOf0 - 1, yPosOf0);
                 children.xPosOf0 -= 1;
                 children.PathCost = this.pathCost + 1;
                 ListOfChildren.Add(children);
@@ -61,7 +61,7 @@ namespace _8Puzzle
             if (yPosOf0 + 1 < Numbers.GetLength(0))
             {
                 PuzzleState children = this;
-                children.move0Position(xPosOf0, yPosOf0 + 1);
+                children.Move0Position(xPosOf0, yPosOf0 + 1);
                 children.yPosOf0 += 1;
                 children.PathCost = this.pathCost + 1;
                 ListOfChildren.Add(children);
@@ -69,7 +69,7 @@ namespace _8Puzzle
             if (yPosOf0 - 1 >= 0)
             {
                 PuzzleState children = this;
-                children.move0Position(xPosOf0, yPosOf0 - 1);
+                children.Move0Position(xPosOf0, yPosOf0 - 1);
                 children.yPosOf0 -= 1;
                 children.PathCost = this.pathCost + 1;
                 ListOfChildren.Add(children);
@@ -77,18 +77,18 @@ namespace _8Puzzle
             return ListOfChildren;
         }
 
-        void move0Position(int newXPos, int newYPos)
+        void Move0Position(int newXPos, int newYPos)
         {//inverte a posição do 0 com o da nova posição
             Numbers[xPosOf0, yPosOf0] = Numbers[newXPos, newYPos];
             Numbers[newXPos, newYPos] = 0;
         }
 
-        void calculateLikenessCost()
+        void CalculateLikenessCost()
         {
-            this.cost = this.pathCost + heuristicCost();
+            this.cost = this.pathCost + HeuristicCost();
         }
 
-        int heuristicCost()
+        int HeuristicCost()
         {
             return 3;
         }
