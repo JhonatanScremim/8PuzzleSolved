@@ -18,50 +18,86 @@ namespace _8Puzzle
         {
             this.inicial = inicial;
             this.final = final;
-            this.closedStates = closedStates;
             this.openStates = openStates;
+            this.closedStates = closedStates;
 
-            hasAnswer = solve();
+            hasAnswer = CheckSolvable(inicial);
+
+            if (hasAnswer)
+            {
+                openStates.Add(inicial);
+                PuzzleState resolution = solve();
+            }
         }
 
-        bool solve()
+        PuzzleState solve()
         {
-            if (verifyFinished())
+            PuzzleState actualState = getLeastCostState();
+            closeState(actualState);
+            if (verifyFinished(actualState))
+            {
+                return actualState;
+            }
+            addNewStates(actualState);
+            return solve();
+        }
+
+        PuzzleState getLeastCostState()
+        {
+            PuzzleState leastCostState = null;
+            foreach (PuzzleState item in openStates)
+            {
+                //Pega o PuzzleState de menor custo
+                if (leastCostState == null)
+                {
+                    leastCostState = item;
+                }
+                else if (leastCostState.Cost > item.Cost)
+                {
+                    leastCostState = item;
+                }
+            }
+            return leastCostState;
+        }
+
+        bool verifyFinished(PuzzleState state)
+        {
+            if (state.Equals(final))
             {
                 return true;
             }
-            generateStates(inicial);
             return false;
         }
 
-        void generateStates(PuzzleState father)
-        {
-            
+        void closeState(PuzzleState state)
+        {//Remove da lista de estados abertos e coloca na de estados fechados
+            closedStates.Add(state);
+            openStates.Remove(openStates.Find(x => x.Equals(state)));
         }
 
-        bool verifyFinished()
+        void addNewStates(PuzzleState state)
         {
-            if (closedStates.Last().Equals(final))
+            List<PuzzleState> list = state.generateChildren();
+            foreach (PuzzleState item in list)
             {
-                return true;
+                openStates.Add(item);
             }
+        }
+
+        bool CheckSolvable(PuzzleState state)
+        {
+            var array = state.Numbers.Cast<int>().ToArray();
+            int count = 0;
+
+            for (int i = 0; i < array.GetLength(0); i++)
+                for (int j = i + 1; j < array.GetLength(1); j++)
+                    if (array[i] > array[j])
+                        count++;
+
+            if (count % 2 == 0)
+                return true;
+
             return false;
-        }
-
-        void goToNextState()
-        {
-
-        }
-
-        int calculateCost()
-        {
-            int cost = 0;
-            return cost;
-        }
-
-        bool ePossivelResolver()
-        {
-
         }
     }
 }

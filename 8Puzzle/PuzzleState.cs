@@ -8,21 +8,28 @@ namespace _8Puzzle
 {
     class PuzzleState
     {
-        private int[][] numbers;
+        private int[,] numbers;
         private int xPosOf0;
         private int yPosOf0;
-        public List<PuzzleState> listOfChildren;
+        private List<PuzzleState> listOfChildren;
+        private int cost = 0;
+        private int pathCost = 0;
 
-        public PuzzleState(int[][] numbers)
+        public int Cost { get => cost; set => cost = value; }
+        public int PathCost { get => pathCost; set => pathCost = value; }
+        public int[,] Numbers { get => numbers; set => numbers = value; }
+        internal List<PuzzleState> ListOfChildren { get => listOfChildren; set => listOfChildren = value; }
+
+        public PuzzleState(int[,] numbers)
         {
-            this.numbers = numbers;
+            this.Numbers = numbers;
 
             //Pega a posição do 0 dentro do arrays
             for (int x = 0; x < numbers.GetLength(0); x++)
             {
                 for (int y = 0; y < numbers.GetLength(1); y++)
                 {
-                    if (numbers[x][y] == 0)
+                    if (numbers[x,y] == 0)
                     {
                         xPosOf0 = x;
                         yPosOf0 = y;
@@ -32,56 +39,64 @@ namespace _8Puzzle
             }
         }
 
-        List<PuzzleState> generateChildren()
-        {
-            //Gera os filhos do puzzle e retorna
-            if(xPosOf0 + 1 < numbers.GetLength(0))
+        public List<PuzzleState> generateChildren()
+        {//Gera os filhos do puzzle e retorna
+            if(xPosOf0 + 1 < Numbers.GetLength(0))
             {
                 //Cria um filho, modifica a posição do 0 e adiciona
                 PuzzleState children = this;
                 children.move0Position(xPosOf0 + 1, yPosOf0);
                 children.xPosOf0 += 1;
-                listOfChildren.Add(children);
+                children.PathCost = this.pathCost + 1;
+                ListOfChildren.Add(children);
             }
             if(xPosOf0 - 1 >= 0)
             {
                 PuzzleState children = this;
                 children.move0Position(xPosOf0 - 1, yPosOf0);
                 children.xPosOf0 -= 1;
-                listOfChildren.Add(children);
+                children.PathCost = this.pathCost + 1;
+                ListOfChildren.Add(children);
             }
-            if (yPosOf0 + 1 < numbers.GetLength(0))
+            if (yPosOf0 + 1 < Numbers.GetLength(0))
             {
                 PuzzleState children = this;
                 children.move0Position(xPosOf0, yPosOf0 + 1);
                 children.yPosOf0 += 1;
-                listOfChildren.Add(children);
+                children.PathCost = this.pathCost + 1;
+                ListOfChildren.Add(children);
             }
             if (yPosOf0 - 1 >= 0)
             {
                 PuzzleState children = this;
                 children.move0Position(xPosOf0, yPosOf0 - 1);
                 children.yPosOf0 -= 1;
-                listOfChildren.Add(children);
+                children.PathCost = this.pathCost + 1;
+                ListOfChildren.Add(children);
             }
-            return listOfChildren;
+            return ListOfChildren;
         }
 
         void move0Position(int newXPos, int newYPos)
-        {
-            numbers[xPosOf0][yPosOf0] = numbers[newXPos][newYPos];
-            numbers[newXPos][newYPos] = 0;
+        {//inverte a posição do 0 com o da nova posição
+            Numbers[xPosOf0, yPosOf0] = Numbers[newXPos, newYPos];
+            Numbers[newXPos, newYPos] = 0;
         }
 
-        int[][] getNumbers()
+        void calculateLikenessCost()
         {
-            return this.numbers;
+            this.cost = this.pathCost + heuristicCost();
+        }
+
+        int heuristicCost()
+        {
+            return 3;
         }
 
         public override bool Equals(object obj)
         {
             return obj is PuzzleState state &&
-                   EqualityComparer<int[][]>.Default.Equals(numbers);
+                   EqualityComparer<int[][]>.Default.Equals(Numbers);
         }
     }
 }
