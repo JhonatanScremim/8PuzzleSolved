@@ -15,15 +15,17 @@ namespace _8Puzzle
         private int cost = 0;
         private int pathCost = 0;
 
+        public int[,] Numbers { get => numbers; set => numbers = value; }
+        public int XPosOf0 { get => xPosOf0; set => xPosOf0 = value; }
+        public int YPosOf0 { get => yPosOf0; set => yPosOf0 = value; }
+        internal List<PuzzleState> ListOfChildren { get => listOfChildren; set => listOfChildren = value; }
         public int Cost { get => cost; set => cost = value; }
         public int PathCost { get => pathCost; set => pathCost = value; }
-        public int[,] Numbers { get => numbers; set => numbers = value; }
-        internal List<PuzzleState> ListOfChildren { get => listOfChildren; set => listOfChildren = value; }
 
         public PuzzleState(int[,] numbers)
         {
-            this.numbers = numbers;
-            listOfChildren = new List<PuzzleState>();
+            this.Numbers = numbers;
+            ListOfChildren = new List<PuzzleState>();
 
             //Pega a posição do 0 dentro do arrays
             for (int x = 0; x < numbers.GetLength(0); x++)
@@ -32,8 +34,8 @@ namespace _8Puzzle
                 {
                     if (numbers[x,y] == 0)
                     {
-                        xPosOf0 = x;
-                        yPosOf0 = y;
+                        XPosOf0 = x;
+                        YPosOf0 = y;
                         return;
                     }
                 }
@@ -42,39 +44,38 @@ namespace _8Puzzle
 
         public List<PuzzleState> GenerateChildren()
         {//Gera os filhos do puzzle e retorna
-            int[,] newNumbers = new int[,] { };
-            newNumbers = Numbers;
-            if (xPosOf0 + 1 < newNumbers.GetLength(0))
+            int[,] newNumbers = (int[,])Numbers.Clone();
+            if (XPosOf0 + 1 < newNumbers.GetLength(0))
             {
                 //Cria um filho, modifica a posição do 0 e adiciona
                 PuzzleState children = new PuzzleState(newNumbers);
-                children.Move0Position(xPosOf0 + 1, yPosOf0, children);
-                children.xPosOf0 += 1;
-                children.PathCost = this.pathCost + 1;
+                children.Move0Position(XPosOf0 + 1, YPosOf0, children);
+                children.XPosOf0 += 1;
+                children.PathCost = this.PathCost + 1;
                 ListOfChildren.Add(children);
             }
-            if(xPosOf0 - 1 >= 0)
+            if(XPosOf0 - 1 >= 0)
             {
                 PuzzleState children = new PuzzleState(newNumbers);
-                children.Move0Position(xPosOf0 - 1, yPosOf0, children);
-                children.xPosOf0 -= 1;
-                children.PathCost = this.pathCost + 1;
+                children.Move0Position(XPosOf0 - 1, YPosOf0, children);
+                children.XPosOf0 -= 1;
+                children.PathCost = this.PathCost + 1;
                 ListOfChildren.Add(children);
             }
-            if (yPosOf0 + 1 < newNumbers.GetLength(0))
+            if (YPosOf0 + 1 < newNumbers.GetLength(0))
             {
                 PuzzleState children = new PuzzleState(newNumbers);
-                children.Move0Position(xPosOf0, yPosOf0 + 1, children);
-                children.yPosOf0 += 1;
-                children.PathCost = this.pathCost + 1;
+                children.Move0Position(XPosOf0, YPosOf0 + 1, children);
+                children.YPosOf0 += 1;
+                children.PathCost = this.PathCost + 1;
                 ListOfChildren.Add(children);
             }
-            if (yPosOf0 - 1 >= 0)
+            if (YPosOf0 - 1 >= 0)
             {
                 PuzzleState children = new PuzzleState(newNumbers);
-                children.Move0Position(xPosOf0, yPosOf0 - 1, children);
-                children.yPosOf0 -= 1;
-                children.PathCost = this.pathCost + 1;
+                children.Move0Position(XPosOf0, YPosOf0 - 1, children);
+                children.YPosOf0 -= 1;
+                children.PathCost = this.PathCost + 1;
                 ListOfChildren.Add(children);
             }
             WriteList();
@@ -83,13 +84,13 @@ namespace _8Puzzle
 
         void Move0Position(int newXPos, int newYPos, PuzzleState state)
         {//inverte a posição do 0 com o da nova posição
-            state.Numbers[state.xPosOf0, state.yPosOf0] = state.Numbers[newXPos, newYPos];
+            state.Numbers[state.XPosOf0, state.YPosOf0] = state.Numbers[newXPos, newYPos];
             state.Numbers[newXPos, newYPos] = 0;
         }
 
         void CalculateLikenessCost()
         {
-            this.cost = this.pathCost + HeuristicCost();
+            this.Cost = this.PathCost + HeuristicCost();
         }
 
         int HeuristicCost()
@@ -119,18 +120,18 @@ namespace _8Puzzle
         public string WriteState()
         {
             string result = "";
-            for (int x = 0; x < numbers.GetLength(0); x++)
+            for (int x = 0; x < Numbers.GetLength(0); x++)
             {
                 result += "[";
-                for (int y = 0; y < numbers.GetLength(1); y++)
+                for (int y = 0; y < Numbers.GetLength(1); y++)
                 {
-                    result += numbers[x, y];
-                    if (y != numbers.GetLength(1) - 1)
+                    result += Numbers[x, y];
+                    if (y != Numbers.GetLength(1) - 1)
                     {
                         result += ",";
                     }
                 }
-                if (x == numbers.GetLength(0) - 1)
+                if (x == Numbers.GetLength(0) - 1)
                 {
                     result += "]";
                 }
@@ -140,6 +141,11 @@ namespace _8Puzzle
                 }
             }
             return result;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
         }
     }
 }
