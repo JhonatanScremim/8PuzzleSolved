@@ -19,7 +19,7 @@ namespace _8Puzzle
 
         static void start()
         {
-            int[,] inicial = new int[,] { { 2, 8, 3 }, { 1, 6, 4 }, { 7, 0, 5 } };
+            int[,] inicial = new int[,] { { 1, 8, 2 }, { 0, 4, 3 }, { 7, 6, 5 } };
             int[,] final = new int[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 0 } };
             PuzzleState inicialState = new PuzzleState(inicial);
             PuzzleState finalState = new PuzzleState(final);

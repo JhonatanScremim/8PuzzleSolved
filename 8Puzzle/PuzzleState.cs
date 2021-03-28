@@ -23,6 +23,7 @@ namespace _8Puzzle
         public PuzzleState(int[,] numbers)
         {
             this.Numbers = numbers;
+            listOfChildren = new List<PuzzleState>();
 
             //Pega a posição do 0 dentro do arrays
             for (int x = 0; x < numbers.GetLength(0); x++)
@@ -44,7 +45,7 @@ namespace _8Puzzle
             if(xPosOf0 + 1 < Numbers.GetLength(0))
             {
                 //Cria um filho, modifica a posição do 0 e adiciona
-                PuzzleState children = this;
+                PuzzleState children = new PuzzleState(this.numbers);
                 children.Move0Position(xPosOf0 + 1, yPosOf0);
                 children.xPosOf0 += 1;
                 children.PathCost = this.pathCost + 1;
@@ -52,7 +53,7 @@ namespace _8Puzzle
             }
             if(xPosOf0 - 1 >= 0)
             {
-                PuzzleState children = this;
+                PuzzleState children = new PuzzleState(this.numbers);
                 children.Move0Position(xPosOf0 - 1, yPosOf0);
                 children.xPosOf0 -= 1;
                 children.PathCost = this.pathCost + 1;
@@ -60,7 +61,7 @@ namespace _8Puzzle
             }
             if (yPosOf0 + 1 < Numbers.GetLength(0))
             {
-                PuzzleState children = this;
+                PuzzleState children = new PuzzleState(this.numbers);
                 children.Move0Position(xPosOf0, yPosOf0 + 1);
                 children.yPosOf0 += 1;
                 children.PathCost = this.pathCost + 1;
@@ -68,7 +69,7 @@ namespace _8Puzzle
             }
             if (yPosOf0 - 1 >= 0)
             {
-                PuzzleState children = this;
+                PuzzleState children = new PuzzleState(this.numbers);
                 children.Move0Position(xPosOf0, yPosOf0 - 1);
                 children.yPosOf0 -= 1;
                 children.PathCost = this.pathCost + 1;

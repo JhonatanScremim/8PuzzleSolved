@@ -23,11 +23,11 @@ namespace _8Puzzle
 
             hasAnswer = CheckSolvable(inicial);
 
-            //if (hasanswer)
-            //{
-            //    openstates.add(inicial);
-            //    puzzlestate resolution = solve();
-            //}
+            if (hasAnswer)
+            {
+                openStates.Add(inicial);
+                PuzzleState resolution = Solve();
+            }
         }
 
         PuzzleState Solve()
