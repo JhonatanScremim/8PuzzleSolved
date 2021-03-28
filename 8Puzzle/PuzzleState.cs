@@ -8,24 +8,24 @@ namespace _8Puzzle
 {
     class PuzzleState
     {
-        private int[,] numbers;
-        private int xPosOf0;
-        private int yPosOf0;
-        private List<PuzzleState> listOfChildren;
-        private int cost = 0;
-        private int pathCost = 0;
+        public int[,] Numbers { get ; set ; }
+        public int XPosOf0 { get; set; }
+        public int YPosOf0 { get; set; }
+        internal List<PuzzleState> ListOfChildren { get; set; }
+        public int Cost { get; set; }
+        public int PathCost { get; set; }
+        internal PuzzleState FinalState { get; set; }
 
-        public int[,] Numbers { get => numbers; set => numbers = value; }
-        public int XPosOf0 { get => xPosOf0; set => xPosOf0 = value; }
-        public int YPosOf0 { get => yPosOf0; set => yPosOf0 = value; }
-        internal List<PuzzleState> ListOfChildren { get => listOfChildren; set => listOfChildren = value; }
-        public int Cost { get => cost; set => cost = value; }
-        public int PathCost { get => pathCost; set => pathCost = value; }
-
-        public PuzzleState(int[,] numbers)
+        public PuzzleState(int[,] numbers, int pathCost, PuzzleState finalState)
         {
             this.Numbers = numbers;
+            this.PathCost = pathCost;
             ListOfChildren = new List<PuzzleState>();
+            this.FinalState = finalState;
+            if(FinalState != null)
+            {
+                CalculateLikenessCost();
+            }
 
             //Pega a posição do 0 dentro do arrays
             for (int x = 0; x < numbers.GetLength(0); x++)
@@ -44,41 +44,39 @@ namespace _8Puzzle
 
         public List<PuzzleState> GenerateChildren()
         {//Gera os filhos do puzzle e retorna
-            int[,] newNumbers = (int[,])Numbers.Clone();
-            if (XPosOf0 + 1 < newNumbers.GetLength(0))
+            if (XPosOf0 + 1 < Numbers.GetLength(0))
             {
                 //Cria um filho, modifica a posição do 0 e adiciona
-                PuzzleState children = new PuzzleState(newNumbers);
+                int[,] newNumbers = (int[,])Numbers.Clone();
+                PuzzleState children = new PuzzleState(newNumbers, this.PathCost + 1, this.FinalState);
                 children.Move0Position(XPosOf0 + 1, YPosOf0, children);
                 children.XPosOf0 += 1;
-                children.PathCost = this.PathCost + 1;
                 ListOfChildren.Add(children);
             }
             if(XPosOf0 - 1 >= 0)
             {
-                PuzzleState children = new PuzzleState(newNumbers);
+                int[,] newNumbers = (int[,])Numbers.Clone();
+                PuzzleState children = new PuzzleState(newNumbers, this.PathCost + 1, this.FinalState);
                 children.Move0Position(XPosOf0 - 1, YPosOf0, children);
                 children.XPosOf0 -= 1;
-                children.PathCost = this.PathCost + 1;
                 ListOfChildren.Add(children);
             }
-            if (YPosOf0 + 1 < newNumbers.GetLength(0))
+            if (YPosOf0 + 1 < Numbers.GetLength(0))
             {
-                PuzzleState children = new PuzzleState(newNumbers);
+                int[,] newNumbers = (int[,])Numbers.Clone();
+                PuzzleState children = new PuzzleState(newNumbers, this.PathCost + 1, this.FinalState);
                 children.Move0Position(XPosOf0, YPosOf0 + 1, children);
                 children.YPosOf0 += 1;
-                children.PathCost = this.PathCost + 1;
                 ListOfChildren.Add(children);
             }
             if (YPosOf0 - 1 >= 0)
             {
-                PuzzleState children = new PuzzleState(newNumbers);
+                int[,] newNumbers = (int[,])Numbers.Clone();
+                PuzzleState children = new PuzzleState(newNumbers, this.PathCost + 1, this.FinalState);
                 children.Move0Position(XPosOf0, YPosOf0 - 1, children);
                 children.YPosOf0 -= 1;
-                children.PathCost = this.PathCost + 1;
                 ListOfChildren.Add(children);
             }
-            WriteList();
             return ListOfChildren;
         }
 
@@ -88,34 +86,44 @@ namespace _8Puzzle
             state.Numbers[newXPos, newYPos] = 0;
         }
 
-        void CalculateLikenessCost()
+        public void CalculateLikenessCost()
         {
             this.Cost = this.PathCost + HeuristicCost();
         }
 
-        int HeuristicCost()
+        private int HeuristicCost()
         {
-            return 3;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is PuzzleState state &&
-                   EqualityComparer<int[][]>.Default.Equals(Numbers);
-        }
-
-        public string WriteList()
-        {
-            string result = "";
-            int count = 0;
-            Console.WriteLine(count + ":\n" + WriteState());
-            foreach (var item in ListOfChildren)
+            int heuristicCost = 0;
+            for (int x = 0; x < Numbers.GetLength(0); x++)
             {
-                Console.WriteLine("\n" + item.WriteState());
+                for (int y = 0; y < Numbers.GetLength(1); y++)
+                {
+                    if(Numbers[x,y] != FinalState.Numbers[x, y])
+                    {
+                        //pega a posição final do número sendo verificado atualmente
+                        int[] posIdeal = FinalState.GetPositionOfNumber(Numbers[x, y]);
+                        heuristicCost += (Math.Abs(posIdeal[1] - y) + Math.Abs(posIdeal[0] - x));
+                    }
+                }
             }
-            Console.ReadKey();
-            return result;
+            return heuristicCost;
         }
+
+        private int[] GetPositionOfNumber(int number)
+        {
+            for (int x = 0; x < Numbers.GetLength(0); x++)
+            {
+                for (int y = 0; y < Numbers.GetLength(1); y++)
+                {
+                    if (Numbers[x, y].Equals(number)){
+                        return new int[] { x, y };
+                    }
+                }
+            }
+            return null;
+        }
+
+        
 
         public string WriteState()
         {
@@ -140,12 +148,8 @@ namespace _8Puzzle
                     result += "]\n";
                 }
             }
+            result += "\ncost:" + Cost;
             return result;
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace _8Puzzle
         private List<PuzzleState> closedStates;
         private List<PuzzleState> openStates;
         public bool hasAnswer = false;
+        int count = 0;
 
         public Solver(PuzzleState inicial, PuzzleState final)
         {
@@ -27,11 +28,13 @@ namespace _8Puzzle
             {
                 openStates.Add(inicial);
                 PuzzleState resolution = Solve();
+                Console.WriteLine("\n\nResolution :: \n" + resolution.WriteState());
             }
         }
 
         PuzzleState Solve()
         {
+            WriteList(false);
             PuzzleState actualState = GetLeastCostState();
             CloseState(actualState);
             if (VerifyFinished(actualState))
@@ -62,7 +65,7 @@ namespace _8Puzzle
 
         bool VerifyFinished(PuzzleState state)
         {
-            if (state.Equals(final))
+            if (state.Numbers.Equals(final.Numbers))
             {
                 return true;
             }
@@ -103,6 +106,29 @@ namespace _8Puzzle
             if (count % 2 == 0) { return true; }
 
             return false;
+        }
+        
+        public string WriteList(bool openOrClosed)
+        {
+            string result = "";
+            if (openOrClosed)
+            {
+                result += "open states:\n";
+                foreach (var item in openStates)
+                {
+                    Console.WriteLine(count++ + "\n" + item.WriteState());
+                }
+            }
+            else
+            {
+                result += "closed states:\n";
+                foreach (var item in closedStates)
+                {
+                    Console.WriteLine(count++ + "\n" + item.WriteState());
+                }
+            }
+            Console.ReadKey();
+            return result;
         }
     }
 }
