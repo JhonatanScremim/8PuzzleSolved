@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace _8Puzzle
 {
@@ -19,8 +20,7 @@ namespace _8Puzzle
             Console.WriteLine("inicial\n" + inicialState.WriteState() + "\n");
             Solver solver = new Solver(inicialState, finalState);
             Console.WriteLine("Has an Answer :: " + solver.hasAnswer + "\n");
-            PuzzleState resolution = solver.Solve();
-            Console.WriteLine("Resolution :: \n" + resolution.WriteState() + "\n");
+            List<PuzzleState> resolution = solver.Solve();
             Console.ReadKey(); 
         }
     }

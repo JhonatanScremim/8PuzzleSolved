@@ -12,6 +12,7 @@ namespace _8Puzzle
         public int XPosOf0 { get; set; }
         public int YPosOf0 { get; set; }
         internal List<PuzzleState> ListOfChildren { get; set; }
+        internal PuzzleState Father { get; set; }
         public int Cost { get; set; }
         public int PathCost { get; set; }
         internal PuzzleState FinalState { get; set; }
@@ -77,6 +78,12 @@ namespace _8Puzzle
                 children.YPosOf0 -= 1;
                 ListOfChildren.Add(children);
             }
+
+            foreach (var childrens in ListOfChildren)
+            {
+                childrens.Father = this;
+            }
+
             return ListOfChildren;
         }
 
@@ -102,7 +109,7 @@ namespace _8Puzzle
                     {
                         //pega a posição final do número sendo verificado atualmente
                         int[] posIdeal = FinalState.GetPositionOfNumber(Numbers[x, y]);
-                        heuristicCost += (Math.Abs(posIdeal[1] - y) + Math.Abs(posIdeal[0] - x));
+                        heuristicCost += Math.Abs(posIdeal[0] - x) + Math.Abs(posIdeal[1] - y);
                     }
                 }
             }

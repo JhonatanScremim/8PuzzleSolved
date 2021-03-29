@@ -30,17 +30,32 @@ namespace _8Puzzle
             }
         }
 
-        public PuzzleState Solve()
+        public List<PuzzleState> Solve()
         {
-            WriteList(false);
             PuzzleState actualState = GetLeastCostState();
             CloseState(actualState);
             if (VerifyFinished(actualState))
             {
-                return actualState;
+                return GetPath(actualState);
             }
             AddNewStates(actualState);
-            return Solve();
+            Solve();
+            return null;
+        }
+
+        List<PuzzleState> GetPath(PuzzleState lastState)
+        {
+            PuzzleState x;
+            List<PuzzleState> list = new List<PuzzleState>();
+            x = lastState;
+            while (x.Father != null)
+            {
+                list.Add(x);
+                x = x.Father;
+            }
+            list.Add(inicial);
+            WriteList(list);
+            return list;
         }
 
         PuzzleState GetLeastCostState()
@@ -66,7 +81,7 @@ namespace _8Puzzle
             {
                 for (int y = 0; y < state.Numbers.GetLength(1); y++)
                 {
-                    if(state.Numbers[x, y] != final.Numbers[x, y]) { return false; }
+                    if (state.Numbers[x, y] != final.Numbers[x, y]) { return false; }
                 }
             }
             return true;
@@ -75,6 +90,7 @@ namespace _8Puzzle
         void CloseState(PuzzleState state)
         {//Remove da lista de estados abertos e coloca na de estados fechados
             closedStates.Add(state);
+            // Dá pra criar uma lista que só adiciona os que tem pouco custo
             openStates.Remove(openStates.Find(x => x.Equals(state)));
         }
 
@@ -108,24 +124,12 @@ namespace _8Puzzle
             return false;
         }
 
-        public string WriteList(bool openOrClosed)
+        public string WriteList(List<PuzzleState> list)
         {
             string result = "";
-            if (openOrClosed)
+            foreach (var item in list)
             {
-                result += "open states:\n";
-                foreach (var item in openStates)
-                {
-                    Console.WriteLine(count++ + "\n" + item.WriteState());
-                }
-            }
-            else
-            {
-                result += "closed states:\n";
-                foreach (var item in closedStates)
-                {
-                    Console.WriteLine(count++ + "\n" + item.WriteState());
-                }
+                Console.WriteLine("iteration:" + count++ + "\n" + item.WriteState());
             }
             return result;
         }
