@@ -33,6 +33,10 @@ namespace _8Puzzle
         public List<PuzzleState> Solve()
         {
             PuzzleState actualState = GetLeastCostState();
+
+            if (actualState == null)
+                return null;
+
             CloseState(actualState);
             if (VerifyFinished(actualState))
             {
