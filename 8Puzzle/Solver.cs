@@ -27,12 +27,10 @@ namespace _8Puzzle
             if (hasAnswer)
             {
                 openStates.Add(inicial);
-                PuzzleState resolution = Solve();
-                Console.WriteLine("\n\nResolution :: \n" + resolution.WriteState());
             }
         }
 
-        PuzzleState Solve()
+        public PuzzleState Solve()
         {
             WriteList(false);
             PuzzleState actualState = GetLeastCostState();
@@ -49,8 +47,7 @@ namespace _8Puzzle
         {
             PuzzleState leastCostState = null;
             foreach (PuzzleState item in openStates)
-            {
-                //Pega o PuzzleState de menor custo
+            {//Pega o PuzzleState de menor custo
                 if (leastCostState == null)
                 {
                     leastCostState = item;
@@ -65,11 +62,14 @@ namespace _8Puzzle
 
         bool VerifyFinished(PuzzleState state)
         {
-            if (state.Numbers.Equals(final.Numbers))
+            for (int x = 0; x < state.Numbers.GetLength(0); x++)
             {
-                return true;
+                for (int y = 0; y < state.Numbers.GetLength(1); y++)
+                {
+                    if(state.Numbers[x, y] != final.Numbers[x, y]) { return false; }
+                }
             }
-            return false;
+            return true;
         }
 
         void CloseState(PuzzleState state)
@@ -107,7 +107,7 @@ namespace _8Puzzle
 
             return false;
         }
-        
+
         public string WriteList(bool openOrClosed)
         {
             string result = "";
@@ -127,7 +127,6 @@ namespace _8Puzzle
                     Console.WriteLine(count++ + "\n" + item.WriteState());
                 }
             }
-            Console.ReadKey();
             return result;
         }
     }

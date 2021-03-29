@@ -8,7 +8,7 @@ namespace _8Puzzle
 {
     class PuzzleState
     {
-        public int[,] Numbers { get ; set ; }
+        public int[,] Numbers { get; set; }
         public int XPosOf0 { get; set; }
         public int YPosOf0 { get; set; }
         internal List<PuzzleState> ListOfChildren { get; set; }
@@ -22,7 +22,7 @@ namespace _8Puzzle
             this.PathCost = pathCost;
             ListOfChildren = new List<PuzzleState>();
             this.FinalState = finalState;
-            if(FinalState != null)
+            if (FinalState != null)
             {
                 CalculateLikenessCost();
             }
@@ -32,7 +32,7 @@ namespace _8Puzzle
             {
                 for (int y = 0; y < numbers.GetLength(1); y++)
                 {
-                    if (numbers[x,y] == 0)
+                    if (numbers[x, y] == 0)
                     {
                         XPosOf0 = x;
                         YPosOf0 = y;
@@ -53,7 +53,7 @@ namespace _8Puzzle
                 children.XPosOf0 += 1;
                 ListOfChildren.Add(children);
             }
-            if(XPosOf0 - 1 >= 0)
+            if (XPosOf0 - 1 >= 0)
             {
                 int[,] newNumbers = (int[,])Numbers.Clone();
                 PuzzleState children = new PuzzleState(newNumbers, this.PathCost + 1, this.FinalState);
@@ -98,7 +98,7 @@ namespace _8Puzzle
             {
                 for (int y = 0; y < Numbers.GetLength(1); y++)
                 {
-                    if(Numbers[x,y] != FinalState.Numbers[x, y])
+                    if (Numbers[x, y] != FinalState.Numbers[x, y])
                     {
                         //pega a posição final do número sendo verificado atualmente
                         int[] posIdeal = FinalState.GetPositionOfNumber(Numbers[x, y]);
@@ -115,15 +115,14 @@ namespace _8Puzzle
             {
                 for (int y = 0; y < Numbers.GetLength(1); y++)
                 {
-                    if (Numbers[x, y].Equals(number)){
+                    if (Numbers[x, y].Equals(number))
+                    {
                         return new int[] { x, y };
                     }
                 }
             }
             return null;
         }
-
-        
 
         public string WriteState()
         {
