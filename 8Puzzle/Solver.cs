@@ -8,10 +8,10 @@ namespace _8Puzzle
 {
     class Solver
     {
-        private PuzzleState inicial;
-        private PuzzleState final;
-        private List<PuzzleState> closedStates;
-        private List<PuzzleState> openStates;
+        public PuzzleState inicial { get; set; }
+        public PuzzleState final { get; set; }
+        public List<PuzzleState> closedStates { get; set; }
+        public List<PuzzleState> openStates { get; set; }
         public bool hasAnswer = false;
         int count = 0;
 
