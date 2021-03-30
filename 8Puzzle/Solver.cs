@@ -36,9 +36,9 @@ namespace _8Puzzle
 
             if (actualState == null)
                 return null;
-    
+
             CloseState(actualState);
-            if (VerifyFinished(actualState))
+            if (VerifyEqual(actualState, final))
             {
                 return GetPath(actualState);
             }
@@ -79,18 +79,6 @@ namespace _8Puzzle
             return leastCostState;
         }
 
-        bool VerifyFinished(PuzzleState state)
-        {
-            for (int x = 0; x < state.Numbers.GetLength(0); x++)
-            {
-                for (int y = 0; y < state.Numbers.GetLength(1); y++)
-                {
-                    if (state.Numbers[x, y] != final.Numbers[x, y]) { return false; }
-                }
-            }
-            return true;
-        }
-
         void CloseState(PuzzleState state)
         {
             //Remove da lista de estados abertos e coloca na de estados fechados
@@ -104,8 +92,22 @@ namespace _8Puzzle
             List<PuzzleState> list = state.GenerateChildren();
             foreach (PuzzleState item in list)
             {
-                openStates.Add(item);
+                if(IsOnThisList(closedStates, item) == false)
+                {
+                    openStates.Add(item);
+                }
             }
+        }
+        public bool IsOnThisList(List<PuzzleState> list, PuzzleState state)
+        {
+            foreach (var item in list)
+            {
+                if(VerifyEqual(item, state))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         bool CheckSolvable(PuzzleState state)
@@ -138,6 +140,18 @@ namespace _8Puzzle
                 Console.WriteLine("iteration:" + count++ + "\n" + item.WriteState());
             }
             return result;
+        }
+
+        bool VerifyEqual(PuzzleState one, PuzzleState two)
+        {
+            for (int x = 0; x < one.Numbers.GetLength(0); x++)
+            {
+                for (int y = 0; y < one.Numbers.GetLength(1); y++)
+                {
+                    if (one.Numbers[x, y] != two.Numbers[x, y]) { return false; }
+                }
+            }
+            return true;
         }
     }
 }
