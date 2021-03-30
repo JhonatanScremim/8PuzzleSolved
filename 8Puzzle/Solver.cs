@@ -43,6 +43,7 @@ namespace _8Puzzle
                 return GetPath(actualState);
             }
             AddNewStates(actualState);
+            Solve();
             return null;
         }
 
@@ -92,7 +93,7 @@ namespace _8Puzzle
             List<PuzzleState> list = state.GenerateChildren();
             foreach (PuzzleState item in list)
             {
-                if(IsOnThisList(closedStates, item) == false)
+                if (IsOnThisList(closedStates, item) == false)
                 {
                     openStates.Add(item);
                 }
@@ -102,7 +103,7 @@ namespace _8Puzzle
         {
             foreach (var item in list)
             {
-                if(VerifyEqual(item, state))
+                if (VerifyEqual(item, state))
                 {
                     return true;
                 }
@@ -137,7 +138,7 @@ namespace _8Puzzle
 
             foreach (var item in list)
             {
-                Console.WriteLine("iteration:" + count++ + "\n" + item.WriteState());
+                Console.WriteLine("\niteration:" + count++ + "\n" + item.WriteState());
             }
             return result;
         }

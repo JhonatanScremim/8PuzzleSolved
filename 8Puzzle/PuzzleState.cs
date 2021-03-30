@@ -156,7 +156,8 @@ namespace _8Puzzle
                     result += "]\n";
                 }
             }
-            result += "\ncost:" + Cost;
+            //Codigo obsoleto * irrelevante = desnecessário
+            //result += "\ncost:" + Cost;
             return result;
         }
     }

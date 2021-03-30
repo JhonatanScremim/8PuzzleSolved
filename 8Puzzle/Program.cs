@@ -20,12 +20,8 @@ namespace _8Puzzle
             Console.WriteLine("inicial\n" + inicialState.WriteState() + "\n");
             Solver solver = new Solver(inicialState, finalState);
             Console.WriteLine("Has an Answer :: " + solver.hasAnswer + "\n");
-            List<PuzzleState> resolution = null;
-            while (resolution == null)
-            {
-                resolution = solver.Solve();
-            }
-            Console.ReadKey(); 
+            List<PuzzleState> resolution = solver.Solve();
+            Console.ReadKey();
         }
     }
 }
