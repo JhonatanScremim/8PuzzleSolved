@@ -15,6 +15,7 @@ namespace _8Puzzle
         public List<PuzzleState> openStates { get; set; }
         public bool hasAnswer = false;
         int count = 0;
+        int counter = 0;
 
         #endregion
 
@@ -41,6 +42,7 @@ namespace _8Puzzle
 
         public List<PuzzleState> Solve()
         {
+            Console.Write("\rcounter :: " + counter);
             PuzzleState actualState = GetLeastCostState();
 
             if (actualState == null)
@@ -52,6 +54,7 @@ namespace _8Puzzle
                 return GetPath(actualState);
             }
             AddNewStates(actualState);
+            counter++;
             Solve();
             return null;
         }
@@ -164,15 +167,13 @@ namespace _8Puzzle
         #endregion
 
         #region Escrever as interações
-        public string WriteList(List<PuzzleState> list)
+        public void WriteList(List<PuzzleState> list)
         {
-            string result = "";
-
+            Console.WriteLine("");
             foreach (var item in list)
             {
-                Console.WriteLine("\niteration:" + count++ + "\n" + item.WriteState());
+                Console.WriteLine("\niteration :: " + count++ + "\n" + item.WriteState());
             }
-            return result;
         }
 
         #endregion
