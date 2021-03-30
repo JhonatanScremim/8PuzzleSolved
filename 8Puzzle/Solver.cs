@@ -8,27 +8,36 @@ namespace _8Puzzle
 {
     class Solver
     {
-        public PuzzleState inicial { get; set; }
+        #region Atributos
+        public PuzzleState initial { get; set; }
         public PuzzleState final { get; set; }
         public List<PuzzleState> closedStates { get; set; }
         public List<PuzzleState> openStates { get; set; }
         public bool hasAnswer = false;
         int count = 0;
 
-        public Solver(PuzzleState inicial, PuzzleState final)
+        #endregion
+
+        #region Construtor
+
+        public Solver(PuzzleState initial, PuzzleState final)
         {
-            this.inicial = inicial;
+            this.initial = initial;
             this.final = final;
             this.openStates = new List<PuzzleState>();
             this.closedStates = new List<PuzzleState>();
 
-            hasAnswer = CheckSolvable(inicial);
+            hasAnswer = CheckSolvable(initial);
 
             if (hasAnswer)
             {
-                openStates.Add(inicial);
+                openStates.Add(initial);
             }
         }
+
+        #endregion
+
+        #region Solver
 
         public List<PuzzleState> Solve()
         {
@@ -38,7 +47,7 @@ namespace _8Puzzle
                 return null;
 
             CloseState(actualState);
-            if (VerifyEqual(actualState, final))
+            if (VerifyFinished(actualState, final))
             {
                 return GetPath(actualState);
             }
@@ -47,20 +56,26 @@ namespace _8Puzzle
             return null;
         }
 
+        #endregion
+
+        #region Listar Resultado
+
         List<PuzzleState> GetPath(PuzzleState lastState)
         {
-            PuzzleState x;
             List<PuzzleState> list = new List<PuzzleState>();
-            x = lastState;
-            while (x.Father != null)
+            while (lastState.Father != null)
             {
-                list.Insert(0, x);
-                x = x.Father;
+                list.Insert(0, lastState);
+                lastState = lastState.Father;
             }
-            list.Insert(0, inicial);
+            list.Insert(0, initial);
             WriteList(list);
             return list;
         }
+
+        #endregion
+
+        #region Obter menor custo
 
         PuzzleState GetLeastCostState()
         {
@@ -80,6 +95,9 @@ namespace _8Puzzle
             return leastCostState;
         }
 
+        #endregion
+
+        #region Adicionar na lista fechada
         void CloseState(PuzzleState state)
         {
             //Remove da lista de estados abertos e coloca na de estados fechados
@@ -88,6 +106,9 @@ namespace _8Puzzle
             openStates.Remove(openStates.Find(x => x.Equals(state)));
         }
 
+        #endregion
+
+        #region Adicionar novo estado
         void AddNewStates(PuzzleState state)
         {
             List<PuzzleState> list = state.GenerateChildren();
@@ -99,11 +120,16 @@ namespace _8Puzzle
                 }
             }
         }
+
+        #endregion
+
+        #region Verificar estado na lista fechada
+
         public bool IsOnThisList(List<PuzzleState> list, PuzzleState state)
         {
             foreach (var item in list)
             {
-                if (VerifyEqual(item, state))
+                if (VerifyFinished(item, state))
                 {
                     return true;
                 }
@@ -111,6 +137,9 @@ namespace _8Puzzle
             return false;
         }
 
+        #endregion
+
+        #region Verificar se existe solução
         bool CheckSolvable(PuzzleState state)
         {
             var array = state.Numbers.Cast<int>().ToArray();
@@ -132,6 +161,9 @@ namespace _8Puzzle
             return false;
         }
 
+        #endregion
+
+        #region Escrever as interações
         public string WriteList(List<PuzzleState> list)
         {
             string result = "";
@@ -143,7 +175,10 @@ namespace _8Puzzle
             return result;
         }
 
-        bool VerifyEqual(PuzzleState one, PuzzleState two)
+        #endregion
+
+        #region Verifica se o estado inicial é igual ao final
+        bool VerifyFinished(PuzzleState one, PuzzleState two)
         {
             for (int x = 0; x < one.Numbers.GetLength(0); x++)
             {
@@ -154,5 +189,7 @@ namespace _8Puzzle
             }
             return true;
         }
+
+        #endregion
     }
 }

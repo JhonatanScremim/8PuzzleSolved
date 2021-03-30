@@ -8,6 +8,7 @@ namespace _8Puzzle
 {
     class PuzzleState
     {
+        #region Atributos
         public int[,] Numbers { get; set; }
         public int XPosOf0 { get; set; }
         public int YPosOf0 { get; set; }
@@ -17,6 +18,9 @@ namespace _8Puzzle
         public int PathCost { get; set; }
         public PuzzleState FinalState { get; set; }
 
+        #endregion
+
+        #region Construtor
         public PuzzleState(int[,] numbers, int pathCost, PuzzleState finalState)
         {
             this.Numbers = numbers;
@@ -42,6 +46,10 @@ namespace _8Puzzle
                 }
             }
         }
+
+        #endregion
+
+        #region Gerar filhos
 
         public List<PuzzleState> GenerateChildren()
         {
@@ -88,12 +96,20 @@ namespace _8Puzzle
             return ListOfChildren;
         }
 
+        #endregion
+
+        #region Mover posição
+
         void Move0Position(int newXPos, int newYPos, PuzzleState state)
         {
             //inverte a posição do 0 com o da nova posição
             state.Numbers[state.XPosOf0, state.YPosOf0] = state.Numbers[newXPos, newYPos];
             state.Numbers[newXPos, newYPos] = 0;
         }
+
+        #endregion
+
+        #region Calculo heuristica
 
         public void CalculateLikenessCost()
         {
@@ -117,7 +133,9 @@ namespace _8Puzzle
             }
             return heuristicCost;
         }
+        #endregion
 
+        #region Pegar a posição do número
         private int[] GetPositionOfNumber(int number)
         {
             for (int x = 0; x < Numbers.GetLength(0); x++)
@@ -132,7 +150,9 @@ namespace _8Puzzle
             }
             return null;
         }
+        #endregion
 
+        #region Escrever estado
         public string WriteState()
         {
             string result = "";
@@ -160,5 +180,6 @@ namespace _8Puzzle
             //result += "\ncost:" + Cost;
             return result;
         }
+        #endregion
     }
 }
