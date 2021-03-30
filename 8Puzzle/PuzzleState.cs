@@ -11,11 +11,11 @@ namespace _8Puzzle
         public int[,] Numbers { get; set; }
         public int XPosOf0 { get; set; }
         public int YPosOf0 { get; set; }
-        internal List<PuzzleState> ListOfChildren { get; set; }
-        internal PuzzleState Father { get; set; }
+        public List<PuzzleState> ListOfChildren { get; set; }
+        public PuzzleState Father { get; set; }
         public int Cost { get; set; }
         public int PathCost { get; set; }
-        internal PuzzleState FinalState { get; set; }
+        public PuzzleState FinalState { get; set; }
 
         public PuzzleState(int[,] numbers, int pathCost, PuzzleState finalState)
         {
@@ -44,7 +44,8 @@ namespace _8Puzzle
         }
 
         public List<PuzzleState> GenerateChildren()
-        {//Gera os filhos do puzzle e retorna
+        {
+            //Gera os filhos do puzzle e retorna
             if (XPosOf0 + 1 < Numbers.GetLength(0))
             {
                 //Cria um filho, modifica a posição do 0 e adiciona
@@ -88,7 +89,8 @@ namespace _8Puzzle
         }
 
         void Move0Position(int newXPos, int newYPos, PuzzleState state)
-        {//inverte a posição do 0 com o da nova posição
+        {
+            //inverte a posição do 0 com o da nova posição
             state.Numbers[state.XPosOf0, state.YPosOf0] = state.Numbers[newXPos, newYPos];
             state.Numbers[newXPos, newYPos] = 0;
         }

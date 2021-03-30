@@ -36,14 +36,13 @@ namespace _8Puzzle
 
             if (actualState == null)
                 return null;
-
+    
             CloseState(actualState);
             if (VerifyFinished(actualState))
             {
                 return GetPath(actualState);
             }
             AddNewStates(actualState);
-            Solve();
             return null;
         }
 
@@ -54,10 +53,10 @@ namespace _8Puzzle
             x = lastState;
             while (x.Father != null)
             {
-                list.Add(x);
+                list.Insert(0, x);
                 x = x.Father;
             }
-            list.Add(inicial);
+            list.Insert(0, inicial);
             WriteList(list);
             return list;
         }
@@ -66,7 +65,8 @@ namespace _8Puzzle
         {
             PuzzleState leastCostState = null;
             foreach (PuzzleState item in openStates)
-            {//Pega o PuzzleState de menor custo
+            {
+                //Pega o PuzzleState de menor custo
                 if (leastCostState == null)
                 {
                     leastCostState = item;
@@ -92,7 +92,8 @@ namespace _8Puzzle
         }
 
         void CloseState(PuzzleState state)
-        {//Remove da lista de estados abertos e coloca na de estados fechados
+        {
+            //Remove da lista de estados abertos e coloca na de estados fechados
             closedStates.Add(state);
             // Dá pra criar uma lista que só adiciona os que tem pouco custo
             openStates.Remove(openStates.Find(x => x.Equals(state)));
@@ -131,6 +132,7 @@ namespace _8Puzzle
         public string WriteList(List<PuzzleState> list)
         {
             string result = "";
+
             foreach (var item in list)
             {
                 Console.WriteLine("iteration:" + count++ + "\n" + item.WriteState());
